@@ -1,0 +1,1170 @@
+/* Import Google font - Poppins */
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap");
+.header {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  background-color: #0b0217;
+}
+a {
+  text-decoration: none;
+}
+.header {
+  position: fixed;
+  height: 80px;
+  width: 100%;
+  z-index: 100;
+  padding: 0 20px;
+  top: 0;
+  left: 0;
+}
+.nav {
+  max-width: 1100px;
+  width: 100%;
+  margin: 0 auto;
+}
+.nav,
+.nav_item {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav_logo,
+.nav_link,
+.button {
+  color: #fff;
+}
+
+.nav_logo .nav_link .button :hover {
+  background-color: #f43636;
+  color: #17a2b8;
+}
+
+.nav_logo {
+  font-size: 25px;
+}
+.nav_item {
+  column-gap: 25px;
+}
+.nav_link:hover {
+  color: #d9d9d9;
+}
+
+.button {
+  padding: 6px 24px;
+  border: 2px solid #fff;
+  background: transparent;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.button:active {
+  transform: scale(0.98);
+}
+
+/* Home */
+.home {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  background-image: url("/images/bg.jpg");
+  background-size: cover;
+  background-position: center;
+}
+.home::before {
+  content: "";
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 100;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s ease-out;
+}
+.home.show::before {
+  opacity: 1;
+  pointer-events: auto;
+}
+/* From */
+.form_container {
+  position: fixed;
+  max-width: 320px;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.2);
+  z-index: 101;
+  background: #fff;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.4s ease-out;
+}
+.home.show .form_container {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translate(-50%, -50%) scale(1);
+}
+.signup_form {
+  display: none;
+}
+.form_container.active .signup_form {
+  display: block;
+}
+.form_container.active .login_form {
+  display: none;
+}
+.form_close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: #0b0217;
+  font-size: 22px;
+  opacity: 0.7;
+  cursor: pointer;
+}
+.form_container h2 {
+  font-size: 22px;
+  color: #0b0217;
+  text-align: center;
+}
+.input_box {
+  position: relative;
+  margin-top: 30px;
+  width: 100%;
+  height: 40px;
+}
+.input_box input {
+  height: 100%;
+  width: 100%;
+  border: none;
+  outline: none;
+  padding: 0 30px;
+  color: #333;
+  transition: all 0.2s ease;
+  border-bottom: 1.5px solid #aaaaaa;
+}
+.input_box input:focus {
+  border-color: #7d2ae8;
+}
+.input_box i {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #707070;
+}
+.input_box i.email,
+.input_box i.password {
+  left: 0;
+}
+.input_box input:focus ~ i.email,
+.input_box input:focus ~ i.password {
+  color: #7d2ae8;
+}
+.input_box i.pw_hide {
+  right: 0;
+  font-size: 18px;
+  cursor: pointer;
+}
+.option_field {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.form_container a {
+  color: #7d2ae8;
+  font-size: 12px;
+}
+.form_container a:hover {
+  text-decoration: underline;
+}
+.checkbox {
+  display: flex;
+  column-gap: 8px;
+  white-space: nowrap;
+}
+.checkbox input {
+  accent-color: #7d2ae8;
+}
+.checkbox label {
+  font-size: 12px;
+  cursor: pointer;
+  user-select: none;
+  color: #0b0217;
+}
+.form_container .button {
+  background: #7d2ae8;
+  margin-top: 30px;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 10px;
+}
+.login_signup {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 15px;
+}
+
+/* body */
+
+body {
+  margin: 0px; /* Adjust this value to match the header's height */
+}
+
+main {
+  padding: 3rem;
+  margin: auto;
+  margin-top: 90px;
+}
+
+.welcome-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.welcome-section img {
+  width: 300px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-section .text {
+  max-width: 800px;
+}
+
+.services {
+  margin-top: 90px;
+}
+
+.services h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.services ul {
+  list-style: none;
+  padding: 0;
+}
+
+.services ul li {
+  font-size: 1rem;
+  margin-bottom: 10px;
+}
+
+/* footer */
+.footer {
+  background-color: #0b0217;
+  color: #fff;
+  padding: 40px 20px;
+}
+
+.footer-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.footer-section {
+  flex: 1 1 250px;
+  min-width: 200px;
+}
+
+.footer-section h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #00aaff;
+}
+
+.footer-section p,
+.footer-section ul {
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 10px;
+}
+
+.footer-section ul li a {
+  color: #fff;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+.footer-section ul li a:hover {
+  color: #00aaff;
+}
+
+.footer-section.social-media a {
+  font-size: 20px;
+  margin-right: 15px;
+  color: #fff;
+  transition: color 0.3s;
+}
+
+.footer-section.social-media a:hover {
+  color: #00aaff;
+}
+
+.footer-bottom {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  border-top: 1px solid #444;
+  padding-top: 15px;
+  color: #aaa;
+}
+
+/************************************ Trains ************************************/
+
+.table-container {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.table-container h2 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #333;
+}
+
+.filters {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.filters select,
+.filters input {
+  padding: 10px 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  flex: 1;
+}
+
+.filters select {
+  background-color: #f8f8f8;
+}
+
+.filters input {
+  flex: 2;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+table th,
+table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+}
+
+table th {
+  background-color: #333;
+  color: #fff;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+table td {
+  background-color: #f8f8f8;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+table tbody tr:hover {
+  background-color: #e8e8e8;
+}
+
+.schedule-title {
+  margin-bottom: 10px;
+  font-size: 18px;
+  text-align: left;
+  color: #444;
+  font-weight: bold;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Modal content */
+.modal-content {
+  width: 50%;
+  max-width: 600px;
+  background: #ffffff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: fadeIn 0.3s ease-in-out;
+  position: relative;
+}
+
+/* Modal fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 24px;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* Modal title */
+.modal-title {
+  background: #007bff;
+  color: #ffffff;
+  padding: 15px 20px;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  margin: 0;
+}
+
+/* Modal body */
+.modal-body {
+  padding: 20px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+}
+
+/* Modal footer buttons */
+.modal-footer {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  background: #f9f9f9;
+  border-top: 1px solid #ddd;
+}
+
+/* Confirm button */
+.confirm-btn {
+  padding: 10px 20px;
+  background: #28a745;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.confirm-btn:hover {
+  background: #218838;
+}
+
+/* Cancel button */
+.cancel-btn {
+  padding: 10px 20px;
+  background: #dc3545;
+  color: #ffffff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+  background: #c82333;
+}
+
+/* payment */
+
+.payment-container {
+  background-color: #ffffff;
+  width: 500px;
+  padding: 20px 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+}
+
+.payment-container h1 {
+  text-align: center;
+  color: #333333;
+  margin-bottom: 10px;
+}
+
+.payment-container .subtitle {
+  text-align: center;
+  color: #666666;
+  margin-bottom: 30px;
+}
+
+/* Form Section */
+.form-section {
+  margin-bottom: 20px;
+}
+
+.form-section h2 {
+  font-size: 18px;
+  color: #007bff;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #007bff;
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+/* Form Group */
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  color: #333333;
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #cccccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+}
+
+.form-group input:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffffff;
+  background-color: #28a745;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+
+/* Dashboard */
+.dashboard-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Header */
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  font-size: 32px;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+.page-header p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Statistics Section */
+.statistics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+}
+
+/* Stat Card */
+.stat-card {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+}
+
+.icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  margin-right: 20px;
+}
+
+.bg-blue {
+  background-color: #007bff;
+}
+
+.bg-green {
+  background-color: #28a745;
+}
+
+.bg-yellow {
+  background-color: #ffc107;
+}
+
+.bg-red {
+  background-color: #dc3545;
+}
+
+.bg-purple {
+  background-color: #6f42c1;
+}
+
+.bg-orange {
+  background-color: #fd7e14;
+}
+
+.bg-cyan {
+  background-color: #17a2b8;
+}
+
+.stat-info h2 {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.stat-value {
+  font-size: 24px;
+  font-weight: bold;
+  color: #555;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .statistics {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .icon {
+    margin-bottom: 10px;
+  }
+}
+
+.function-card {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  transition: transform 0.3s ease;
+}
+
+.function-card:hover {
+  transform: translateY(-5px);
+}
+
+.function-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 24px;
+  margin-right: 20px;
+}
+
+.function-info h3 {
+  font-size: 18px;
+  color: #333;
+  margin: 0;
+  margin-bottom: 5px;
+}
+
+.function-info p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* Colors for Function Icons */
+.bg-blue {
+  background-color: #007bff;
+}
+
+.bg-green {
+  background-color: #28a745;
+}
+
+.bg-orange {
+  background-color: #fd7e14;
+}
+
+/* Functionality Section */
+.functionality-section {
+  margin-top: 40px;
+}
+
+.section-title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-bottom: 2px solid #007bff;
+  display: inline-block;
+}
+
+/* Form Card */
+.form-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.submit-btn {
+  padding: 12px 20px;
+  font-size: 16px;
+  color: #ffffff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Manage Tickets Specific Styles */
+.manage-tickets-container {
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-subtitle {
+  text-align: left;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Ticket Table */
+.manage-tickets-container table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.manage-tickets-container thead {
+  background-color: #007bff;
+  color: white;
+}
+
+.manage-tickets-container th,
+.manage-tickets-container td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.manage-tickets-container tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Action Buttons */
+.manage-tickets-container .action-btn {
+  padding: 5px 10px;
+  margin: 2px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.manage-tickets-container .update-btn {
+  background-color: #ffc107;
+  color: white;
+}
+
+.manage-tickets-container .delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.manage-tickets-container .view-btn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.manage-tickets-container .add-ticket-btn {
+  display: block;
+  margin: 0 auto;
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Modal */
+.manage-tickets-container .modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.manage-tickets-container .modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.manage-tickets-container .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+}
+
+.manage-tickets-container .submit-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.assign-staff-container {
+  font-family: Arial, sans-serif;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.assign-staff-container .form-title {
+  text-align: center;
+  font-size: 24px;
+  color: #007bff;
+}
+
+.assign-staff-container .form-subtitle {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.assign-staff-container .form-group {
+  margin-bottom: 20px;
+}
+
+.assign-staff-container .form-group label {
+  display: block;
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+.assign-staff-container .form-group select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.assign-staff-container .form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+.assign-staff-container .submit-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.assign-staff-container .submit-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Modal Description */
+.modal-description {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 25px;
+}
+
+.tickets-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+}
+
+.ticket {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(135deg, #ffffff, #e3e8f0); /* Soft gradient */
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 15px;
+  width: 600px;
+  position: relative;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin: 15px 0;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.ticket-left {
+  padding: 30px;
+  border-right: 2px dashed #ccc;
+  flex: 2;
+}
+
+.ticket-left h3 {
+  margin: 0 0 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #2a4365; /* Deep blue for the route */
+}
+
+.ticket-left p {
+  margin: 10px 0;
+  font-size: 16px;
+  color: #4a5568; /* Softer gray for details */
+}
+
+.ticket-left p strong {
+  color: #1a202c; /* Darker text for labels */
+}
+
+.ticket-right {
+  padding: 30px;
+  text-align: center;
+  flex: 1;
+  background: #edf2f7; /* Light neutral background */
+  border-radius: 0 15px 15px 0;
+}
+
+.ticket-right .price {
+  font-size: 24px;
+  font-weight: bold;
+  color: #2a4365;
+  margin-bottom: 15px;
+}
+
+.payment-status {
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 20px;
+  padding: 10px 15px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.payment-status.done-payment {
+  background: #48bb78; /* Soft green for Done Payment */
+  color: #ffffff;
+}
+
+.payment-status.pending-payment {
+  background: #e53e3e; /* Soft red for Pending Payment */
+  color: #ffffff;
+}
+
+.ticket:before,
+.ticket:after {
+  content: "";
+  position: absolute;
+  width: 10px;
+  height: 20px;
+  background: #edf2f7;
+  border: 1px solid #ccc;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 1;
+}
+
+.ticket:before {
+  left: -5px;
+  border-radius: 50%;
+}
+
+.ticket:after {
+  right: -5px;
+  border-radius: 50%;
+}
+
+.ticket:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-download {
+  display: inline-block;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(90deg, #007bff, #0056b3);
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+.btn-download:hover {
+  background: linear-gradient(90deg, #0056b3, #004085);
+  transform: scale(1.05);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+.btn-download:active {
+  transform: scale(0.98);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}

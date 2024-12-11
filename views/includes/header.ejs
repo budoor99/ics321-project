@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tareeq Rail</title>
+    <link rel="stylesheet" href="/style.css" />
+    <!-- Unicons -->
+    <link
+      rel="stylesheet"
+      href="https://unicons.iconscout.com/release/v4.0.0/css/line.css"
+    />
+  </head>
+  <body>
+    <!-- Header -->
+    <header class="header">
+      <nav class="nav">
+        <a href="#" class="nav_logo">Tareeq Rail</a>
+
+        <ul class="nav_items">
+          <li class="nav_item">
+            <a href="/" class="nav_link">Home</a>
+            <a href="/trains" class="nav_link">Trains</a>
+            <a href="/tickets" class="nav_link">Tickets</a>
+            <% if (role === "Admin") { %>
+            <a href="/dashboard" class="nav_link">Dashboard</a>
+            <% } %>
+          </li>
+        </ul>
+        <div style="display: flex; align-items: center; gap: 20px">
+          <h4 style="color: aliceblue">Welcom, <%= role %> <%= username %></h4>
+          <button class="button" id="logoutBtn">logout</button>
+        </div>
+      </nav>
+    </header>
+  </body>
+</html>

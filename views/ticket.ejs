@@ -1,0 +1,31 @@
+<%- include('includes/header.ejs') %>
+<main>
+    <header class="page-header">
+        <h1>Your Tickets</h1>
+        <p>Review your journey and stay prepared!!</p>
+        <hr>
+    </header>
+    <div class="dashboard-container">
+        <div class="tickets-container">
+            <% tickets.forEach(ticket => { %>
+                <div class="ticket">
+                    <div class="ticket-left">
+                        <h3 class="route"><%= ticket.route %></h3>
+                        <p><strong>Date:</strong> <%= ticket.date %></p>
+                        <p><strong>Time:</strong> <%= ticket.timeBooking %></p>
+                        <p><strong>Car:</strong> <%= ticket.car %></p>
+                    </div>
+                    <div class="ticket-right">
+                        <p class="price"><%= ticket.price %></p>
+                        <span class="payment-status <%= ticket.paymentStatus.toLowerCase().replace(' ', '-') %>">
+                            <%= ticket.paymentStatus %>
+                        </span>
+                    </div>
+                </div>
+            <% }); %>
+        </div>
+    </div>
+</main>
+<%- include('includes/footer.ejs') %>
+</body>
+</html>

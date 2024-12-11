@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Active Trains Report</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        color: #333;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      .header img {
+        width: 120px;
+        height: auto;
+      }
+
+      .header h1 {
+        margin: 10px 0 5px;
+        font-size: 24px;
+        color: #4caf50;
+      }
+
+      .header p {
+        margin: 0;
+        font-size: 12px;
+        color: #777;
+      }
+
+      .report-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+
+      .report-table th,
+      .report-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+      }
+
+      .report-table th {
+        background-color: #f4f4f4;
+        color: #4caf50;
+      }
+
+      .footer {
+        margin-top: 20px;
+        text-align: center;
+        font-size: 10px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <img src="data:image/png;base64,<%= logo %>" alt="Company Logo" />
+      <h1>Active Trains Report</h1>
+      <p>Generated on: <%= new Date().toLocaleString() %></p>
+    </div>
+
+    <table class="report-table">
+      <thead>
+        <tr>
+          <th>Train Name</th>
+          <th>From Station</th>
+          <th>To Station</th>
+          <th>Departure Time</th>
+          <th>Arrival Time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% trains.forEach(train => { %>
+        <tr>
+          <td><%= train.EnglishName %></td>
+          <td><%= train.FromStation %></td>
+          <td><%= train.ToStation %></td>
+          <td><%= train.DepartureTime %></td>
+          <td><%= train.ArrivalTime %></td>
+        </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <div class="footer">
+      Train System &copy; <%= new Date().getFullYear() %>
+    </div>
+  </body>
+</html>

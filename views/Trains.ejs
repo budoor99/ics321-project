@@ -1,0 +1,98 @@
+<%- include('includes/header.ejs') %>
+<main>
+    <header class="page-header">
+        <h1>Available Train Details</h1>
+        <p>Find the best train for your journey and reserve your seat today!</p>
+        <hr>
+    </header>
+    <a
+        href="/trains/generate-report"
+        class="btn-download"
+        onmouseover="this.style.transform='scale(1.05)'; this.style.backgroundColor='#45a049';"
+        onmouseout="this.style.transform='scale(1)'; this.style.backgroundColor='#4CAF50';"
+    >
+        📄Download Active Trains Report
+    </a>
+
+    <div class="table-container">
+        <!-- Filters -->
+        <div class="filters">
+            <select id="departureCityFilter">
+                <option value="">ALL</option>
+                <option value="Chicago">Chicago</option>
+                <option value="Boston">Boston</option>
+                <option value="New Orleans">New Orleans</option>
+                <option value="Stockton">Stockton</option>
+                <option value="New York">New York</option>
+                <option value="Seattle">Seattle</option>
+            </select>
+
+            <select id="arrivalCityFilter">
+                <option value="">ALL</option>
+                <option value="Carbondale">Carbondale</option>
+                <option value="New York">New York</option>
+                <option value="Los Angeles">Los Angeles</option>
+                <option value="San Diego">San Diego</option>
+                <option value="Miami">Miami</option>
+                <option value="Washington">Washington</option>
+            </select>
+
+            <input type="text" id="trainNameFilter" placeholder="Search by Train Name">
+        </div>
+
+        <!-- Train Table -->
+        <table id="trainTable">
+            <thead>
+                <tr>
+                    <th>Train ID</th>
+                    <th>Arabic Name</th>
+                    <th>English Name</th>
+                    <th>From Station</th>
+                    <th>To Station</th>
+                    <th>Departure Time</th>
+                    <th>Arrival Time</th>
+                    <th>Price</th>
+                    <th>Available Seats</th>
+                    <th>Book</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% trains.forEach(train => { %>
+                    <tr>
+                        <td><%= train.TrainID %></td>
+                        <td><%= train.ArabicName %></td>
+                        <td><%= train.EnglishName %></td>
+                        <td><%= train.FromStation %></td>
+                        <td><%= train.ToStation %></td>
+                        <td><%= train.DepartureTime %></td>
+                        <td><%= train.ArrivalTime %></td>
+                        <td>$<%= train.Price %></td>
+                        <td><%= train.AvailableSeats %></td>
+                        <td><button class="book-btn">Book</button></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal to Display Booking Information -->
+    <div id="bookingModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2 class="modal-title">Train Booking Details</h2>
+            <div class="modal-body">
+                <p id="bookingDetails"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="confirm-btn" onclick="window.location.href='/payment'">Confirm Booking</button>
+                <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+                <a href="/payment"></a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<%- include('includes/footer.ejs') %>
+<script src="/Trains.js"></script>
+</body>
+</html>

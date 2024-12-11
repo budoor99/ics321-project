@@ -1,0 +1,271 @@
+<%- include('includes/header.ejs') %>
+<main>
+    <!-- Header -->
+    <header class="page-header">
+        <h1>Admin Dashboard</h1>
+        <p>Track your system's performance and key metrics</p>
+        <hr>
+    </header>
+    <div class="dashboard-container">
+        <!-- Statistics Section -->
+        <section class="statistics">
+            <div class="stat-card">
+                <div class="icon bg-blue">
+                    <i class="fas fa-train"></i>
+                </div>
+                <div class="stat-info">
+                    <h2>Total Trains</h2>
+                    <p class="stat-value">150</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon bg-green">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-info">
+                    <h2>Total Passengers</h2>
+                    <p class="stat-value">23,450</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon bg-yellow">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="stat-info">
+                    <h2>Total Revenue</h2>
+                    <p class="stat-value">$1,254,000</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon bg-red">
+                    <i class="fas fa-chair"></i>
+                </div>
+                <div class="stat-info">
+                    <h2>Available Seats</h2>
+                    <p class="stat-value">3,500</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon bg-purple">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-info">
+                    <h2>Approved Tickets</h2>
+                    <p class="stat-value">20,000</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon bg-orange">
+                    <i class="fas fa-hourglass-half"></i>
+                </div>
+                <div class="stat-info">
+                    <h2>Pending Tickets</h2>
+                    <p class="stat-value">1,200</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="icon bg-cyan">
+                    <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="stat-info">
+                    <h2>Total Employees</h2>
+                    <p class="stat-value">85</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Functionality: Add Train -->
+        <section class="functionality-section">
+            <h2 class="section-title">Add New Train</h2>
+            <form class="form-card">
+                <div class="form-group">
+                    <label for="trainName">Train Name in English</label>
+                    <input type="text" id="trainName" placeholder="Enter Train Name(EN)" required>
+                </div>
+                <div class="form-group">
+                    <label for="trainNameAR">Train Name in Arabic</label>
+                    <input type="text" id="trainNameAR" placeholder="Enter Train Name(AR)" required>
+                </div>
+                <div class="form-group">
+                    <label for="trainNumber">Train Number</label>
+                    <input type="text" id="trainNumber" placeholder="Enter Train Number" required>
+                </div>
+                <!-- <div class="form-group">
+                        <label for="trainRoute">Train Route</label>
+                        <input type="text" id="trainRoute" placeholder="Format: [Source] - [Destination]" required>
+                    </div> -->
+                <div class="form-group">
+                    <label for="departure">Departure</label>
+                    <input type="text" id="departure" placeholder="Enter Source/Departure" required>
+                </div>
+                <div class="form-group">
+                    <label for="capacity">Train capacity</label>
+                    <input type="text" id="capacity" placeholder="Enter the train capacity" required>
+                </div>
+                <button type="submit" class="submit-btn">Add Train</button>
+            </form>
+        </section>
+
+        <!-- Functionality: Manage tickets -->
+        <h1 class="section-title">Manage Tickets</h1>
+        <p class="page-subtitle">Add, edit, or cancel tickets from the schedule</p>
+        <div class="manage-tickets-container">
+            <!-- Ticket Table -->
+            <table id="ticketTable">
+                <thead>
+                    <tr>
+                        <th>Train Number</th>
+                        <th>Train</th>
+                        <th>Route</th>
+                        <th>Departure</th>
+                        <th>Arrival</th>
+                        <th>Dep. Time</th>
+                        <th>Fare</th>
+                        <th>Total Passengers</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CA-007</td>
+                        <td>Black Water</td>
+                        <td>Chicago - Carbondale</td>
+                        <td>Chicago</td>
+                        <td>Carbondale</td>
+                        <td>7:00 AM</td>
+                        <td>$33</td>
+                        <td>195</td>
+                        <td>
+                            <button class="action-btn update-btn" onclick="editTicket(this)">Update</button>
+                            <button class="action-btn delete-btn" onclick="deleteTicket(this)">Delete</button>
+                            <button class="action-btn view-btn" onclick="viewTicket(this)">View</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>CA-107</td>
+                        <td>Colonial</td>
+                        <td>Boston - New York</td>
+                        <td>Boston</td>
+                        <td>New York</td>
+                        <td>10:45 AM</td>
+                        <td>$35</td>
+                        <td>255</td>
+                        <td>
+                            <button class="action-btn update-btn" onclick="editTicket(this)">Update</button>
+                            <button class="action-btn delete-btn" onclick="deleteTicket(this)">Delete</button>
+                            <button class="action-btn view-btn" onclick="viewTicket(this)">View</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- Add Ticket Button -->
+            <button class="submit-btn" onclick="openAddTicketModal()">Add Ticket</button>
+        </div>
+
+        <!-- Other Functionalities -->
+        <section class="functionality-section">
+            <h1 class="section-title">Assign Staff to Train</h1>
+            <p class="page-subtitle">Select the details to assign staff to a specific train</p>
+            <div class="form-card" id="assignStaffDiv">
+                <!-- Staff Name Dropdown -->
+                <div class="form-group">
+                    <label for="staffName">Staff Name</label>
+                    <select id="staffName" required>
+                        <option value="" disabled selected>Select Staff Name</option>
+                        <option value="John Doe">John Doe</option>
+                        <option value="Jane Smith">Jane Smith</option>
+                    </select>
+                </div>
+
+                <!-- Role Dropdown -->
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <select id="role" required>
+                        <option value="" disabled selected>Select Role</option>
+                        <option value="Driver">Driver</option>
+                        <option value="Engineer">Engineer</option>
+                    </select>
+                </div>
+
+                <!-- Train Number Dropdown -->
+                <div class="form-group">
+                    <label for="trainNum">Assign to Train</label>
+                    <select id="trainNum" required>
+                        <option value="" disabled selected>Select Train Number</option>
+                        <option value="Train-001">Train-001</option>
+                        <option value="Train-002">Train-002</option>
+                    </select>
+                </div>
+
+                <!-- Submit Button -->
+                <button class="submit-btn" onclick="submitAssignment()">Assign Staff</button>
+            </div>
+        </section>
+
+        <!-- Functionality: Promote Waitlisted Passenger -->
+        <section class="functionality-section">
+            <h2 class="section-title">Promote Waitlisted Passenger</h2>
+            <form class="form-card">
+                <div class="form-group">
+                    <label for="passengerName">Passenger Name</label>
+                    <input type="text" id="passengerName" placeholder="Enter Passenger Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="trainWaitlisted">Train Number</label>
+                    <input type="text" id="trainWaitlisted" placeholder="Enter Train Number" required>
+                </div>
+                <button type="submit" class="submit-btn">Promote Passenger</button>
+            </form>
+        </section>
+    </div>
+</main>
+
+<!-- Confirmation Modal for Staff Assignment -->
+<div id="assignModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2 class="modal-title">Assign Staff</h2>
+        <p id="modal-description" class="modal-description"></p>
+        <div class="modal-footer">
+            <button class="confirm-btn" onclick="confirmAssignment()">OK</button>
+            <button class="cancel-btn" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Adding/Editing Tickets -->
+<div id="ticketModal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h2 id="modalTitle">Add Ticket</h2>
+        <form id="ticketForm" onsubmit="submitTicket(event)">
+            <div class="form-group">
+                <label for="trainNumber">Train Number</label>
+                <input type="text" id="trainNumber" placeholder="Enter Train Number" required>
+            </div>
+            <div class="form-group">
+                <label for="trainName">Train Name</label>
+                <input type="text" id="trainName" placeholder="Enter Train Name" required>
+            </div>
+            <div class="form-group">
+                <label for="route">Route</label>
+                <input type="text" id="route" placeholder="Enter Route (Source - Destination)" required>
+            </div>
+            <div class="form-group">
+                <label for="departureTime">Departure Time</label>
+                <input type="time" id="departureTime" required>
+            </div>
+            <div class="form-group">
+                <label for="fare">Fare</label>
+                <input type="number" id="fare" placeholder="Enter Fare" required>
+            </div>
+            <button type="submit" class="submit-btn">Submit</button>
+        </form>
+    </div>
+</div>
+
+<%- include('includes/footer.ejs') %>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+<script src="/dashboard.js"></script>
+</body>
+</html>
