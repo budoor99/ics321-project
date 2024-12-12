@@ -4,7 +4,7 @@
         <h1>Book Train</h1>
         <p class="subtitle">Fill in all the details to reserve your seat</p>
         <div class="center-container">
-            <form class="payment-form">
+            <form class="payment-form" id="bookingForm">
                 <!-- User Details Section -->
                 <div class="form-section">
                     <h2>User Details</h2>
@@ -25,7 +25,32 @@
                         <input type="text" id="address" placeholder="Enter your address" required>
                     </div>
                 </div>
-
+    
+                <!-- Dependent Details Section -->
+                <label>
+                    <input type="checkbox" id="bookForDependentsCheckbox">
+                    Are you booking for dependents?
+                </label>
+            
+                <!-- Dependents Section -->
+                <div id="dependentsSection" style="display: none; margin-top: 1rem;">
+                    <h3>Dependent Details</h3>
+                    <ul id="dependentsList">
+                        <% if (dependents && dependents.length > 0) { %>
+                            <% dependents.forEach((dependent) => { %>
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="dependentList" value="<%= dependent.PersonID %>">
+                                        <%= dependent.Name %> (<%= dependent.Relationship %>)
+                                    </label>
+                                </li>
+                            <% }); %>
+                        <% } else { %>
+                            <li>No dependents found.</li>
+                        <% } %>
+                    </ul>
+                </div>
+    
                 <!-- Train Details Section -->
                 <div class="form-section">
                     <h2>Train Details</h2>
@@ -38,7 +63,7 @@
                         <input type="text" id="seatNumber" placeholder="Enter seat number" required>
                     </div>
                 </div>
-
+    
                 <!-- Payment Section -->
                 <div class="form-section">
                     <h2>Payment Details</h2>
@@ -59,14 +84,15 @@
                         <input type="text" id="cvv" placeholder="123" required>
                     </div>
                 </div>
-
+    
                 <!-- Submit Button -->
                 <button type="submit" class="submit-btn">Pay Now</button>
             </form>
         </div>
-    </div>
+    </div>    
 </main>
 
 <%- include('includes/footer.ejs') %>
+<script src="payment.js"></script>
 </body>
 </html>

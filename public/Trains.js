@@ -100,3 +100,25 @@ if (errorMessage) {
 function downloadPDF() {
   window.open("/generate-active-trains-pdf", "_blank");
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const rows = Array.from(document.querySelectorAll("#trainTable tbody tr"));
+
+  rows.forEach((row) => {
+    const classSelect = row.querySelector(".class-select");
+    const priceCell = row.querySelector(".price");
+
+    classSelect.addEventListener("change", () => {
+      const basePrice = parseFloat(
+        priceCell.dataset.basePrice || priceCell.textContent.replace("$", ""),
+      );
+      const isBusiness = classSelect.value === "Business";
+      const updatedPrice = isBusiness ? basePrice + 20 : basePrice;
+
+      // Update the price display
+      priceCell.textContent = `$${updatedPrice}`;
+      // Save the base price in the data attribute
+      priceCell.dataset.basePrice = basePrice;
+    });
+  });
+});

@@ -30,6 +30,7 @@ exports.getPayment = (req, res, next) => {
   res.render("Payment", {
     username: req.session.username,
     role: req.session.role,
+    dependents: db.getDependentsByPersonID(req.session.user.PersonID),
   });
 };
 

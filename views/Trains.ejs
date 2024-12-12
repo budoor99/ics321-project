@@ -53,6 +53,7 @@
                     <th>Arrival Time</th>
                     <th>Price</th>
                     <th>Available Seats</th>
+                    <th>Class</th>
                     <th>Book</th>
                 </tr>
             </thead>
@@ -66,8 +67,14 @@
                         <td><%= train.ToStation %></td>
                         <td><%= train.DepartureTime %></td>
                         <td><%= train.ArrivalTime %></td>
-                        <td>$<%= train.Price %></td>
+                        <td class="price">$<%= train.Price %></td>
                         <td><%= train.AvailableSeats %></td>
+                        <td>
+                            <select class="class-select">
+                                <option value="Economy" selected>Economy</option>
+                                <option value="Business">Business</option>
+                            </select>
+                        </td>
                         <td><button class="book-btn">Book</button></td>
                     </tr>
                 <% }); %>

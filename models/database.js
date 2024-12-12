@@ -238,6 +238,21 @@ function insertTrip({
   return result.lastInsertRowid;
 }
 
+function addDependent(name, relationship, personID) {
+  try {
+    const sql = `
+            INSERT INTO Dependent (Name, Relationship, PersonID)
+            VALUES (?, ?, ?);
+        `;
+    const stmt = db.prepare(sql);
+    stmt.run(name, relationship, personID);
+    return { success: true, message: "Dependent added successfully" };
+  } catch (error) {
+    console.error("Error inserting dependent:", error);
+    return { success: false, message: "Failed to add dependent" };
+  }
+}
+
 // const tripData = {
 //     sequenceNumber: 1, // Ensure this is defined
 //     arrivalTime: "2024-12-11T14:00:00",
@@ -343,6 +358,16 @@ function getTripsDetails() {
   return db.prepare(sql).all(); // Return the result of the query
 }
 
+function getDependentsByPersonID(personID) {
+  const sql = `
+        SELECT Name, Relationship, PersonID
+        FROM Dependent
+        WHERE PersonID = ?;
+    `;
+  const dependents = db.prepare(sql).all(personID); // Execute the query
+  return dependents;
+}
+
 // Function to fetch all table names
 function getAllTables() {
   const query = `
@@ -392,11 +417,12 @@ function displayTableData(table) {
     console.log(`No data found in ${table}`);
   }
 }
-// console.log(getAllData("Trip"))
-// console.log(getAllData("Trip"))
+// console.log(getAllData("Person"));
+// console.log(getAllData("Dependent"));
 // console.log(getScheduledUnpaidTickets())
-// console.log(displayTableStructures())
+// console.log(displayTableStructures());
 // displayTableStructures();
+// console.log(getDependentsByPersonID("1"));
 
 module.exports = {
   usernameExists,
@@ -410,4 +436,5 @@ module.exports = {
   getScheduledUnpaidTickets,
   getActiveTrains,
   getTripsDetails,
+  getDependentsByPersonID,
 };

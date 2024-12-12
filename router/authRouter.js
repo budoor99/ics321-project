@@ -52,7 +52,7 @@ router.post(
       const matchUsername = await db.usernameExists(username);
       if (matchUsername) {
         generalErrors.push(
-          "Username has already been taken, please try again!"
+          "Username has already been taken, please try again!",
         );
         res.render("login", { errors: generalErrors });
         return;
@@ -69,7 +69,7 @@ router.post(
       console.log(ex);
       res.render("login", { error: "Sorry, Internal Server Error!" });
     }
-  }
+  },
 );
 
 router.post(
@@ -88,7 +88,8 @@ router.post(
 
     try {
       // Check if user exists
-      const user = db.usernameExists(username);
+      const user = await db.usernameExists(username);
+      const u = await db.getUserData(username);
       if (!user) {
         return res.render("login", {
           errors: ["Account doesn't exist, you may create a new one!"],
@@ -106,6 +107,7 @@ router.post(
       req.session.regenerate(() => {
         req.session.username = username;
         req.session.role = db.getRole(username);
+        req.session.user = u;
         res.redirect("/");
       });
     } catch (error) {
@@ -114,7 +116,7 @@ router.post(
         errors: ["Internal server error. Please try again later."],
       });
     }
-  }
+  },
 );
 
 module.exports = router;
