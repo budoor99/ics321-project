@@ -1,54 +1,43 @@
 import sqlite3
 from datetime import datetime
 
-def update_trip_table_with_data():
-    conn = sqlite3.connect("train system1.db")
-    cursor = conn.cursor()
+conn = sqlite3.connect('train_systemFF.db')
 
-    # Check if Trip table exists
-    cursor.execute("""
-        SELECT name FROM sqlite_master WHERE type='table' AND name='Trip';
-    """)
-    table_exists = cursor.fetchone()
+# Connect to your database
+cursor = conn.cursor()
 
-    if table_exists:
-        print("Updating the Trip table schema...")
+cursor.execute("""
+SELECT name 
+FROM sqlite_master 
+WHERE type='table';
+""")
+tables = cursor.fetchall()
 
-        # Step 1: Rename the existing table
-        cursor.execute("ALTER TABLE Trip RENAME TO Trip_backup;")
+print("Tables in the database:")
+for table in tables:
+    print(f"- {table[0]}")
 
-        # Step 2: Create the new table with updated schema
-        cursor.execute("""
-            CREATE TABLE Trip (
-                TripID INTEGER PRIMARY KEY AUTOINCREMENT,
-                SequenceNumber INT NOT NULL,
-                ArrivalTime TEXT NOT NULL,
-                DepartureTime TEXT NOT NULL,
-                Price INT NOT NULL,
-                AvailableSeats INT NOT NULL,
-                Distance INT NOT NULL,
-                StationID INT,
-                FROMStationID INT,
-                TrainID INT NOT NULL
-            );
-        """)
+# Step 2: Get schema info for each table
+for table in tables:
+    table_name = table[0]
+    print(f"\nSchema for table: {table_name}")
 
-        # Step 3: Copy data back into the new table
-        cursor.execute("""
-            INSERT INTO Trip (SequenceNumber, ArrivalTime, DepartureTime, Price, 
-                              AvailableSeats, Distance, StationID, FROMStationID, TrainID)
-            SELECT SequenceNumber, ArrivalTime, DepartureTime, Price, 
-                   AvailableSeats, Distance, StationID, FROMStationID, TrainID
-            FROM Trip_backup;
-        """)
+    # Fetch table columns and primary keys
+    cursor.execute(f"PRAGMA table_info('{table_name}');")
+    columns = cursor.fetchall()
+    for col in columns:
+        print(f"Column: {col[1]}, Type: {col[2]}, PK: {col[5]}")
 
-        # Step 4: Drop the backup table
-        cursor.execute("DROP TABLE Trip_backup;")
-        print("Trip table updated successfully, and data has been preserved.")
+    # Fetch foreign keys
+    print("Foreign Keys:")
+    cursor.execute(f"PRAGMA foreign_key_list('{table_name}');")
+    foreign_keys = cursor.fetchall()
+    if foreign_keys:
+        for fk in foreign_keys:
+            print(f"FK: Column '{fk[3]}' -> {fk[2]}.{fk[4]}")
     else:
-        print("Trip table does not exist or is already up to date.")
+        print("No foreign keys.")
 
-    conn.commit()
-    conn.close()
+# # Close the connection
+conn.close()
 
-update_trip_table_with_data()

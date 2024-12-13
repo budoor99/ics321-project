@@ -1,4 +1,4 @@
-const db = require("better-sqlite3")("train system1.db");
+const db = require("better-sqlite3")("train_systemFF.db");
 
 function usernameExists(username) {
   return db.prepare("SELECT * FROM Account WHERE username = ?").get(username);
@@ -19,7 +19,7 @@ function isAdmin(username) {
         WHERE a.Username = ?;
     `;
   const result = db.prepare(query).get(username);
-  return result?.Role === "Admin";
+  return result.Role;
 }
 
 function isStaff(username) {
@@ -31,7 +31,7 @@ function isStaff(username) {
         WHERE a.Username = ?;
     `;
   const result = db.prepare(query).get(username);
-  return result?.Role === "Driver" || result?.Role === "Engineer";
+  return result.Role;
 }
 
 function isPassenger(username) {
@@ -47,9 +47,10 @@ function isPassenger(username) {
 }
 
 function getRole(username) {
+  const IsStaff = isStaff(username);
   if (isPassenger(username)) return "Passenger";
-  else if (isStaff(username)) return isStaff(username).Role;
-  else if (isAdmin(username)) return isAdmin(username).Role;
+  else if (IsStaff === "Driver" || IsStaff === "Engineer") IsStaff;
+  else if (isAdmin(username) == "Admin") return "Admin";
   return undefined;
 }
 
@@ -113,23 +114,29 @@ function getStaffData(username) {
 
 function getPassengerData(username) {
   const query = `
-        SELECT 
-            p.PersonID,
-            p.First_Name,
-            p.Last_Name,
-            p.Email,
-            ps.LoyaltyMiles,
-            ps.IdentificationDoc,
-            a.Username
-        FROM 
-            Account a
-        JOIN 
-            Person p ON a.PersonID = p.PersonID
-        JOIN 
-            Passenger ps ON p.PersonID = ps.PersonID
-        WHERE 
-            a.Username = ?;
-    `;
+          SELECT 
+              p.PersonID,
+              p.First_Name,
+              p.Last_Name,
+              p.Email,
+              ps.LoyaltyMiles,
+              ps.IdentificationDoc,
+              a.Username,
+              lc.ClassName AS LoyaltyClass,
+              lc.DiscountPercentage AS LoyaltyDiscount
+          FROM 
+              Account a
+          JOIN 
+              Person p ON a.PersonID = p.PersonID
+          JOIN 
+              Passenger ps ON p.PersonID = ps.PersonID
+          LEFT JOIN 
+              CLASSIFIED c ON p.PersonID = c.PersonID
+          LEFT JOIN 
+              Loyal_Class lc ON c.LoyaltyClassID = lc.LoyaltyClassID
+          WHERE 
+              a.Username = ?;
+      `;
   return db.prepare(query).get(username);
 }
 
@@ -185,15 +192,28 @@ function addPassenger(person) {
   return result.lastInsertRowid;
 }
 
+function addAdmin(id) {
+  const adminInsert = db.prepare(`
+          INSERT INTO Staff (PersonID, Role)
+          VALUES (?, 'Admin')
+      `);
+  const result = adminInsert.run(id);
+  console.log("Successfully added the Admin");
+  return result.lastInsertRowid;
+}
+
+// addAdmin(12323);
 function insertTicket(ticket) {
+  const index = getLastIndexTicket() + 1;
   const query = `
-        INSERT INTO Ticket (CoachType, TicketStatus, SeatNumber, IsPaid, TotalAmount, PersonID, TripID)
-        VALUES (?, ?, ?, ?, ?, ?, ?);
+        INSERT INTO Ticket (TicketID, CoachType, TicketStatus, SeatNumber, IsPaid, TotalAmount, PersonID, TripID)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?);
     `;
 
   const stmt = db.prepare(query);
 
   const result = stmt.run(
+    index,
     ticket.CoachType, // e.g., 'Economy' or 'Business'
     ticket.TicketStatus, // e.g., 'Confirmed' or 'Pending'
     ticket.SeatNumber, // e.g., '15B'
@@ -207,7 +227,19 @@ function insertTicket(ticket) {
   return result.lastInsertRowid; // Return the ID of the newly created ticket
 }
 
+function getLastIndexTicket() {
+  const query = `SELECT MAX(TicketID) AS LastIndex FROM Ticket`; // Assuming TicketID is the primary key
+  const result = db.prepare(query).get();
+
+  if (result && result.LastIndex !== null) {
+    return result.LastIndex;
+  } else {
+    return 0; // If no records exist in the Ticket table
+  }
+}
+
 function insertTrip({
+  TripID,
   sequenceNumber,
   arrivalTime,
   departureTime,
@@ -218,24 +250,69 @@ function insertTrip({
   fromStationID,
   trainID,
 }) {
-  const query = `
-        INSERT INTO Trip 
-        (SequenceNumber, ArrivalTime, DepartureTime, Price, AvailableSeats, Distance, StationID, FROMStationID, TrainID)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+  // Prepare database statements
+  const checkTripIDQuery = `SELECT 1 FROM Trip WHERE TripID = ?`;
+  const checkStationQuery = `SELECT 1 FROM Station WHERE StationID = ?`;
+  const checkTrainQuery = `SELECT 1 FROM Train WHERE TrainID = ?`;
+
+  const insertQuery = `
+      INSERT INTO Trip 
+      (TripID, SequenceNumber, ArrivalTime, DepartureTime, Price, AvailableSeats, Distance, StationID, FROMStationID, TrainID)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
     `;
-  const stmt = db.prepare(query);
-  const result = stmt.run(
-    sequenceNumber,
-    arrivalTime,
-    departureTime,
-    price,
-    availableSeats,
-    distance,
-    stationID,
-    fromStationID,
-    trainID,
-  );
-  return result.lastInsertRowid;
+
+  try {
+    // Check if TripID already exists
+    const tripExists = db.prepare(checkTripIDQuery).get(TripID);
+    if (tripExists) {
+      throw new Error(`TripID ${TripID} already exists.`);
+    }
+
+    // Check if StationID exists (if provided)
+    if (stationID) {
+      const stationExists = db.prepare(checkStationQuery).get(stationID);
+      if (!stationExists) {
+        throw new Error(`StationID ${stationID} does not exist.`);
+      }
+    }
+
+    // Check if FROMStationID exists (if provided)
+    if (fromStationID) {
+      const fromStationExists = db
+        .prepare(checkStationQuery)
+        .get(fromStationID);
+      if (!fromStationExists) {
+        throw new Error(`FROMStationID ${fromStationID} does not exist.`);
+      }
+    }
+
+    // Check if TrainID exists
+    const trainExists = db.prepare(checkTrainQuery).get(trainID);
+    if (!trainExists) {
+      throw new Error(`TrainID ${trainID} does not exist.`);
+    }
+
+    // Insert data into the Trip table
+    const stmt = db.prepare(insertQuery);
+    const result = stmt.run(
+      TripID,
+      sequenceNumber,
+      arrivalTime,
+      departureTime,
+      price,
+      availableSeats,
+      distance,
+      stationID,
+      fromStationID,
+      trainID,
+    );
+
+    console.log("Trip inserted successfully:", result);
+    return result.lastInsertRowid;
+  } catch (error) {
+    console.error("Error inserting trip:", error.message);
+    throw error;
+  }
 }
 
 function addDependent(name, relationship, personID) {
@@ -252,19 +329,6 @@ function addDependent(name, relationship, personID) {
     return { success: false, message: "Failed to add dependent" };
   }
 }
-
-// const tripData = {
-//     sequenceNumber: 1, // Ensure this is defined
-//     arrivalTime: "2024-12-11T14:00:00",
-//     departureTime: "2024-12-11T12:00:00",
-//     price: 100,
-//     availableSeats: 50,
-//     distance: 200,
-//     stationID: 2,
-//     fromStationID: 1,
-//     trainID: 1,
-// };
-// insertTrip(tripData);
 
 // insertTicket({CoachType: 'Economy',    // Example values
 //     TicketStatus: 'Confirmed',
@@ -326,7 +390,7 @@ function getScheduledUnpaidTickets() {
         JOIN 
             Station s2 ON tr.FROMStationID = s2.StationID
         WHERE 
-            t.IsPaid = 0; -- Only fetch unpaid tickets
+            LOWER(t.IsPaid) = 'no';
     `;
 
   return db.prepare(query).all(); // Fetch all unpaid tickets
@@ -345,7 +409,9 @@ function getTripsDetails() {
         tr.Price,
         tr.AvailableSeats,
         tr.FROMStationID,
-        tr.StationID
+        tr.StationID,
+        tr.TripID,
+        t.Capacity
       FROM 
         Train t
       JOIN 
@@ -358,6 +424,24 @@ function getTripsDetails() {
   return db.prepare(sql).all(); // Return the result of the query
 }
 
+function getAvailableSeats(tripID) {
+  const query = "SELECT AvailableSeats FROM Trip WHERE TripID = ?";
+  const result = db.prepare(query).get(tripID);
+  return result ? result.AvailableSeats : null;
+}
+
+function getTrainCapacity(trainID) {
+  const query = "SELECT Capacity FROM Train WHERE TrainID = ?";
+  const result = db.prepare(query).get(trainID);
+  return result ? result.Capacity : null;
+}
+
+function getTrainIDByTripID(tripID) {
+  const query = "SELECT TrainID FROM Trip WHERE TripID = ?";
+  const result = db.prepare(query).get(tripID);
+  return result ? result.TrainID : null;
+}
+
 function getDependentsByPersonID(personID) {
   const sql = `
         SELECT Name, Relationship, PersonID
@@ -368,6 +452,214 @@ function getDependentsByPersonID(personID) {
   return dependents;
 }
 
+function updateAvailableSeats(tripId, newAvailableSeats) {
+  try {
+    const updateQuery = `UPDATE Trip SET AvailableSeats = ? WHERE TripID = ?;`;
+    db.prepare(updateQuery).run(newAvailableSeats, tripId);
+
+    console.log(
+      `Available seats updated for TripID ${tripId}: ${newAvailableSeats}`,
+    );
+  } catch (error) {
+    console.error(`Error updating available seats: ${error.message}`);
+  }
+}
+
+function addToWaitingList({
+  reservationDate,
+  tempReservationExpiryDate,
+  status,
+  passengerId,
+  tripId,
+  personId,
+}) {
+  const query = `
+      INSERT INTO WaitingList (ReservationDate, TempReservationExpiryDate, Status, PassengerD, TripID, PersonID)
+      VALUES (?, ?, ?, ?, ?, ?);
+    `;
+  const stmt = db.prepare(query);
+  stmt.run(
+    reservationDate,
+    tempReservationExpiryDate,
+    status,
+    passengerId,
+    tripId,
+    personId,
+  );
+}
+
+function getDepartureTime(tripId) {
+  const departureQuery = `SELECT DepartureTime FROM Trip WHERE TripID = ?;`;
+  const result = db.prepare(departureQuery).get(tripId);
+  if (!result) {
+    throw new Error("Invalid TripID provided.");
+  }
+  return new Date(result.DepartureTime); // Convert to Date object
+}
+
+function getTicketsByPersonId(personId) {
+  const query = `
+    SELECT 
+      Ticket.TicketID,
+      Ticket.CoachType,
+      Ticket.TicketStatus,
+      Ticket.SeatNumber,
+      Ticket.IsPaid,
+      Ticket.TotalAmount,
+      Trip.ArrivalTime,
+      Trip.DepartureTime,
+      Trip.Price AS TripPrice,
+      StationFrom.StationName AS FromStation,
+      StationTo.StationName AS ToStation
+    FROM Ticket
+    JOIN Trip ON Ticket.TripID = Trip.TripID
+    JOIN Station AS StationFrom ON Trip.FROMStationID = StationFrom.StationID
+    JOIN Station AS StationTo ON Trip.StationID = StationTo.StationID
+    WHERE Ticket.PersonID = ?;
+  `;
+
+  const stmt = db.prepare(query);
+  const tickets = stmt.all(personId); // Fetch all tickets for the given PersonID
+
+  return tickets || [];
+}
+
+function updatePaymentStatus(ticketId) {
+  const query = `
+      UPDATE Ticket 
+      SET IsPaid = 'Yes', TicketStatus = 1
+      WHERE TicketID = ?;
+    `;
+
+  const stmt = db.prepare(query);
+  const result = stmt.run(ticketId);
+
+  if (result.changes === 0) {
+    // No rows were updated
+    throw new Error(`No ticket found with TicketID: ${ticketId}`);
+  }
+
+  console.log(`Payment updated successfully for TicketID: ${ticketId}`);
+}
+
+function deleteTicketById(ticketId) {
+  try {
+    const query = `
+        DELETE FROM Ticket
+        WHERE TicketID = ?;
+      `;
+
+    const stmt = db.prepare(query);
+    const result = stmt.run(ticketId);
+
+    // if (result.changes === 0) {
+    //   throw new Error(`No ticket found with TicketID: ${ticketId}`);
+    // }
+
+    console.log(`Ticket with TicketID: ${ticketId} deleted successfully.`);
+    return {
+      success: true,
+      message: `Ticket with TicketID: ${ticketId} deleted successfully.`,
+    };
+  } catch (err) {
+    console.error("Error deleting ticket:", err.message);
+    throw err;
+  }
+}
+
+function deletePassenger(personID) {
+  try {
+    const query = `
+          DELETE FROM Passenger
+          WHERE PersonID = ?;
+        `;
+
+    const stmt = db.prepare(query);
+    const result = stmt.run(personID);
+
+    // if (result.changes === 0) {
+    //   throw new Error(`No ticket found with TicketID: ${ticketId}`);
+    // }
+
+    console.log(`passenger: ${personID} deleted successfully.`);
+    return {
+      success: true,
+      message: `passenger: ${ticketId} deleted successfully.`,
+    };
+  } catch (err) {
+    console.error("Error deleting paseenger:", err.message);
+    throw err;
+  }
+}
+
+function getTotalTrains() {
+  try {
+    const query = `SELECT COUNT(*) AS TotalTrains FROM Train;`;
+    const result = db.prepare(query).get(); // Execute the query
+    return result.TotalTrains; // Return the total count
+  } catch (err) {
+    console.error("Error fetching total number of trains:", err.message);
+    return 0; // Return 0 if there is an error
+  }
+}
+
+function getTotalPassengers() {
+  try {
+    const query = `SELECT COUNT(*) AS TotalPassengers FROM Passenger;`;
+    const result = db.prepare(query).get(); // Execute the query
+    return result.TotalPassengers; // Return the total count
+  } catch (err) {
+    console.error("Error fetching total number of passengers:", err.message);
+    return 0; // Return 0 if there is an error
+  }
+}
+
+function getTotalPendingTickets() {
+  return getScheduledUnpaidTickets().length;
+}
+
+function getAllStaff() {
+  try {
+    const query = `
+      SELECT 
+        s.PersonID,
+        p.First_Name,
+        p.Last_Name,
+        p.Email,
+        s.Role
+      FROM 
+        Staff s
+      JOIN 
+        Person p ON s.PersonID = p.PersonID
+      WHERE 
+        s.Role IN ('Engineer', 'Driver');
+    `;
+
+    const result = db.prepare(query).all(); // Execute the query
+    return result; // Return the array of engineers and drivers
+  } catch (err) {
+    console.error("Error fetching engineers and drivers:", err.message);
+    return []; // Return an empty array in case of an error
+  }
+}
+
+function getTotalPaidTickets() {
+  try {
+    const query = `
+      SELECT COUNT(*) AS TotalPaidTickets
+      FROM Ticket
+      WHERE IsPaid ='Yes';
+    `;
+
+    const result = db.prepare(query).get(); // Execute the query
+    return result.TotalPaidTickets; // Return the count of paid tickets
+  } catch (err) {
+    console.error("Error fetching total number of paid tickets:", err.message);
+    return 0; // Return 0 if there is an error
+  }
+}
+
+// *****************************************************************************************8
 // Function to fetch all table names
 function getAllTables() {
   const query = `
@@ -417,12 +709,41 @@ function displayTableData(table) {
     console.log(`No data found in ${table}`);
   }
 }
+
+// insertTicket({
+//   CoachType: "Business",
+//   TicketStatus: 1,
+//   SeatNumber: 10,
+//   IsPaid: "Yes",
+//   TotalAmount: 100,
+//   PersonID: 133331,
+//   TripID: 1,
+// });
+// deletePassenger(12345);
+// addAdmin(12345);
+// console.log(getAllData("Train"));
 // console.log(getAllData("Person"));
-// console.log(getAllData("Dependent"));
+// console.log(getAllData("Passenger"));
 // console.log(getScheduledUnpaidTickets())
 // console.log(displayTableStructures());
 // displayTableStructures();
 // console.log(getDependentsByPersonID("1"));
+// console.log(getAllData("Ticket"));
+// insertTrip({
+//   TripID: 18, // Ensure this is unique
+//   sequenceNumber: 2,
+//   arrivalTime: "2024-12-15 08:00:00",
+//   departureTime: "2024-12-15 06:00:00",
+//   price: 100,
+//   availableSeats: 120,
+//   distance: 300,
+//   stationID: 1,
+//   fromStationID: 2,
+//   trainID: 1,
+// });
+// console.log(getAllData("WaitingList"));
+
+// console.log(getScheduledUnpaidTickets());
 
 module.exports = {
   usernameExists,
@@ -437,4 +758,19 @@ module.exports = {
   getActiveTrains,
   getTripsDetails,
   getDependentsByPersonID,
+  getTrainCapacity,
+  getAvailableSeats,
+  getTrainIDByTripID,
+  updateAvailableSeats,
+  addToWaitingList,
+  getDepartureTime,
+  insertTicket,
+  getTicketsByPersonId,
+  updatePaymentStatus,
+  deleteTicketById,
+  getTotalTrains,
+  getTotalPassengers,
+  getTotalPaidTickets,
+  getAllStaff,
+  getTotalPendingTickets,
 };

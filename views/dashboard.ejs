@@ -6,6 +6,7 @@
         <p>Track your system's performance and key metrics</p>
         <hr>
     </header>
+
     <div class="dashboard-container">
         <!-- Statistics Section -->
         <section class="statistics">
@@ -15,7 +16,7 @@
                 </div>
                 <div class="stat-info">
                     <h2>Total Trains</h2>
-                    <p class="stat-value">150</p>
+                    <p class="stat-value"><%= totalTrains %></p>
                 </div>
             </div>
             <div class="stat-card">
@@ -24,25 +25,7 @@
                 </div>
                 <div class="stat-info">
                     <h2>Total Passengers</h2>
-                    <p class="stat-value">23,450</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon bg-yellow">
-                    <i class="fas fa-dollar-sign"></i>
-                </div>
-                <div class="stat-info">
-                    <h2>Total Revenue</h2>
-                    <p class="stat-value">$1,254,000</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="icon bg-red">
-                    <i class="fas fa-chair"></i>
-                </div>
-                <div class="stat-info">
-                    <h2>Available Seats</h2>
-                    <p class="stat-value">3,500</p>
+                    <p class="stat-value"><%= totalPassengers %></p>
                 </div>
             </div>
             <div class="stat-card">
@@ -51,7 +34,7 @@
                 </div>
                 <div class="stat-info">
                     <h2>Approved Tickets</h2>
-                    <p class="stat-value">20,000</p>
+                    <p class="stat-value"><%= totalApprovedTickets %></p>
                 </div>
             </div>
             <div class="stat-card">
@@ -60,7 +43,7 @@
                 </div>
                 <div class="stat-info">
                     <h2>Pending Tickets</h2>
-                    <p class="stat-value">1,200</p>
+                    <p class="stat-value"><%= totalPendingTickets %></p>
                 </div>
             </div>
             <div class="stat-card">
@@ -68,11 +51,80 @@
                     <i class="fas fa-user-tie"></i>
                 </div>
                 <div class="stat-info">
-                    <h2>Total Employees</h2>
-                    <p class="stat-value">85</p>
+                    <h2>Total Staff</h2>
+                    <p class="stat-value"><%= totalStaff.length %></p>
                 </div>
             </div>
         </section>
+
+        <!-- Functionality: Trips -->
+        <section class="functionality-section">
+            <h2 class="section-title">Manaege Trips</h2>
+            <div class="manage-tickets-container">
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Trip ID</th>
+                        <th>Price</th>
+                        <th>Available Seats</th>
+                        <th>Departure Time</th>
+                        <th>Arrival Time</th>
+                        <th>From Station</th>
+                        <th>To Station</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% Trips.forEach((trip) => { %>
+                        <tr>
+                          <td><%= trip.TripID %></td>
+                          <td><%= trip.Price %></td>
+                          <td><%= trip.AvailableSeats %></td>
+                          <td><%= trip.DepartureTime %></td>
+                          <td><%= trip.ArrivalTime %></td>
+                          <td><%= trip.FromStation %></td>
+                          <td><%= trip.ToStation %></td>
+                          <td>
+                            <button 
+                              class="btn update-btn" 
+                              onclick="openModifyModal('<%= trip.TripID %>', '<%= trip.Price %>',' <%= trip.AvailableSeats %>', '<%= trip.DepartureTime %>', '<%= trip.ArrivalTime %>')">
+                              Modify
+                            </button>
+                            <button class="btn delete-btn" onclick="confirmDelete('<%= trip.TripID %>')">Delete</button>
+                          </td>
+                        </tr>
+                      <% }) %>
+                    </tbody>
+                  </table>
+            </div>
+        </section>
+
+        <div id="modifyModal" class="modal" style="display: none;">
+            <div class="modal-content">
+              <h2>Modify Trip</h2>
+              <form id="modifyTripForm">
+                <input type="hidden" id="tripId" name="tripId"> <!-- Trip ID (hidden) -->
+                <div class="form-group">
+                  <label for="price">Price</label>
+                  <input type="number" id="price" name="price" required>
+                </div>
+                <div class="form-group">
+                  <label for="availableSeats">Available Seats</label>
+                  <input type="number" id="availableSeats" name="availableSeats" required>
+                </div>
+                <div class="form-group">
+                  <label for="departureTime">Departure Time</label>
+                  <input type="datetime-local" id="departureTime" name="departureTime" required>
+                </div>
+                <div class="form-group">
+                  <label for="arrivalTime">Arrival Time</label>
+                  <input type="datetime-local" id="arrivalTime" name="arrivalTime" required>
+                </div>
+                <button type="submit" class="btn">Submit</button>
+                <button type="button" class="btn" onclick="closeModifyModal()">Cancel</button>
+              </form>
+            </div>
+          </div>
 
         <!-- Functionality: Add Train -->
         <section class="functionality-section">
@@ -267,5 +319,6 @@
 <%- include('includes/footer.ejs') %>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 <script src="/dashboard.js"></script>
+<script src="/header.js"></script>
 </body>
 </html>

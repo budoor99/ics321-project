@@ -44,7 +44,7 @@
         <table id="trainTable">
             <thead>
                 <tr>
-                    <th>Train ID</th>
+                    <th>Trip ID</th>
                     <th>Arabic Name</th>
                     <th>English Name</th>
                     <th>From Station</th>
@@ -59,24 +59,26 @@
             </thead>
             <tbody>
                 <% trains.forEach(train => { %>
-                    <tr>
-                        <td><%= train.TrainID %></td>
-                        <td><%= train.ArabicName %></td>
-                        <td><%= train.EnglishName %></td>
-                        <td><%= train.FromStation %></td>
-                        <td><%= train.ToStation %></td>
-                        <td><%= train.DepartureTime %></td>
-                        <td><%= train.ArrivalTime %></td>
-                        <td class="price">$<%= train.Price %></td>
-                        <td><%= train.AvailableSeats %></td>
-                        <td>
-                            <select class="class-select">
-                                <option value="Economy" selected>Economy</option>
-                                <option value="Business">Business</option>
-                            </select>
-                        </td>
-                        <td><button class="book-btn">Book</button></td>
-                    </tr>
+                <tr>
+                    <td data-train-id="<%= train.TripID %>"><%= train.TripID %></td>
+                    <td><%= train.ArabicName %></td>
+                    <td><%= train.EnglishName %></td>
+                    <td><%= train.FromStation %></td>
+                    <td><%= train.ToStation %></td>
+                    <td><%= train.DepartureTime %></td>
+                    <td><%= train.ArrivalTime %></td>
+                    <td class="price">$<%= train.Price %></td>
+                    <td><%= train.AvailableSeats %></td>
+                    <td>
+                        <select class="class-select">
+                            <option value="Economy" selected>Economy</option>
+                            <option value="Business">Business</option>
+                        </select>
+                    </td>
+                    <td>
+                        <button type="button" class="book-btn">Book</button>
+                    </td>
+                </tr>
                 <% }); %>
             </tbody>
         </table>
@@ -85,15 +87,11 @@
     <!-- Modal to Display Booking Information -->
     <div id="bookingModal" class="modal" style="display: none;">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal()">&times;</span>
-            <h2 class="modal-title">Train Booking Details</h2>
-            <div class="modal-body">
-                <p id="bookingDetails"></p>
-            </div>
+            <h2>Confirm Booking</h2>
+            <div id="confirmationDetails"></div>
             <div class="modal-footer">
-                <button class="confirm-btn" onclick="window.location.href='/payment'">Confirm Booking</button>
+                <button id="confirmBooking" class="confirm-btn">Confirm</button>
                 <button class="cancel-btn" onclick="closeModal()">Cancel</button>
-                <a href="/payment"></a>
             </div>
         </div>
     </div>
@@ -101,5 +99,6 @@
 
 <%- include('includes/footer.ejs') %>
 <script src="/Trains.js"></script>
+<script src="/header.js"></script>
 </body>
 </html>

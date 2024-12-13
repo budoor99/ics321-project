@@ -38,63 +38,66 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Add event listener to all "Book" buttons
   const bookButtons = document.querySelectorAll(".book-btn");
   const bookingModal = document.getElementById("bookingModal");
-  const bookingDetails = document.getElementById("bookingDetails");
+  const confirmationDetails = document.getElementById("confirmationDetails");
+  const confirmButton = document.getElementById("confirmBooking");
+  let selectedTrainData = {}; // Store selected train data
 
+  // Add event listener to each Book button
   bookButtons.forEach((button) => {
     button.addEventListener("click", (event) => {
-      // Get the row of the clicked button
-      const row = event.target.closest("tr");
+      const row = button.closest("tr");
 
-      // Extract information from the row's cells
-      const trainID = row.cells[0].textContent;
-      const arabicName = row.cells[1].textContent;
-      const englishName = row.cells[2].textContent;
-      const fromStation = row.cells[3].textContent;
-      const toStation = row.cells[4].textContent;
-      const depTime = row.cells[5].textContent;
-      const arrTime = row.cells[6].textContent;
-      const fare = row.cells[7].textContent;
-      const availableSeats = row.cells[8].textContent;
+      // Extract train data from the row
+      selectedTrainData = {
+        TripID: row.querySelector("td:nth-child(1)").textContent.trim(),
+        arabicName: row.querySelector("td:nth-child(2)").textContent.trim(),
+        englishName: row.querySelector("td:nth-child(3)").textContent.trim(),
+        fromStation: row.querySelector("td:nth-child(4)").textContent.trim(),
+        toStation: row.querySelector("td:nth-child(5)").textContent.trim(),
+        departureTime: row.querySelector("td:nth-child(6)").textContent.trim(),
+        arrivalTime: row.querySelector("td:nth-child(7)").textContent.trim(),
+        price: row.querySelector(".price").textContent.trim().replace("$", ""),
+        selectedClass: row.querySelector(".class-select").value,
+      };
 
-      // Format and display the details in the modal
-      bookingDetails.innerHTML = `
-            <strong>Train ID:</strong> ${trainID}<br>
-            <strong>Arabic Name:</strong> ${arabicName}<br>
-            <strong>English Name:</strong> ${englishName}<br>
-            <strong>From Station:</strong> ${fromStation}<br>
-            <strong>To Station:</strong> ${toStation}<br>
-            <strong>Departure Time:</strong> ${depTime}<br>
-            <strong>Arrival Time:</strong> ${arrTime}<br>
-            <strong>Fare:</strong> ${fare}<br>
-            <strong>Available Seats:</strong> ${availableSeats}<br>
-        `;
+      // Populate the modal with the booking details
+      confirmationDetails.innerHTML = `
+                <p><strong>Train ID:</strong> ${selectedTrainData.trainID}</p>
+                <p><strong>Arabic Name:</strong> ${selectedTrainData.arabicName}</p>
+                <p><strong>English Name:</strong> ${selectedTrainData.englishName}</p>
+                <p><strong>From Station:</strong> ${selectedTrainData.fromStation}</p>
+                <p><strong>To Station:</strong> ${selectedTrainData.toStation}</p>
+                <p><strong>Departure Time:</strong> ${selectedTrainData.departureTime}</p>
+                <p><strong>Arrival Time:</strong> ${selectedTrainData.arrivalTime}</p>
+                <p><strong>Class:</strong> ${selectedTrainData.selectedClass}</p>
+                <p><strong>Price:</strong> $${selectedTrainData.price}</p>
+            `;
 
       // Show the modal
       bookingModal.style.display = "flex";
     });
   });
+
+  // Confirm Booking
+  confirmButton.addEventListener("click", () => {
+    // Redirect to the payment page with the data
+    const params = new URLSearchParams(selectedTrainData).toString();
+    window.location.href = `/payment?${params}`;
+  });
+
+  // Close Modal
+  function closeModal() {
+    bookingModal.style.display = "none";
+  }
+
+  window.closeModal = closeModal; // Expose function globally
 });
 
 // Function to close the modal
 function closeModal() {
   document.getElementById("bookingModal").style.display = "none";
-}
-
-// Parse the query parameters from the URL
-const params = new URLSearchParams(window.location.search);
-
-// Check if there is an error message
-const errorMessage = params.get("error");
-
-if (errorMessage) {
-  // Display the error message in an alert or on the page
-  alert(errorMessage);
-
-  // Optionally, clear the query parameter after displaying the message
-  window.history.replaceState({}, document.title, window.location.pathname);
 }
 
 function downloadPDF() {

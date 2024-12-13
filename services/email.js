@@ -48,7 +48,7 @@ async function sendUnpaidTicketReminders() {
     await sendEmail(
       "tareeqx99@gmail.com",
       "Unpaid Ticket Reminder",
-      emailMessage
+      emailMessage,
     );
   });
 

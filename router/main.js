@@ -21,4 +21,14 @@ router.post("/insert-trip", mainController.postTrip);
 
 router.get("/trains/generate-report", report.activeTrainsReport);
 
+router.post("/process-payment", mainController.handlePayment);
+
+router.post("/pay-ticket", mainController.latePayment);
+router.post("/delete-ticket", mainController.deleteTicket);
+router.put("/modify-trip/:tripId", (req, res) => {
+  const { tripId } = req.params;
+  const { price, availableSeats, departureTime, arrivalTime } = req.body;
+  console.log(tripId, price);
+});
+
 module.exports = router;

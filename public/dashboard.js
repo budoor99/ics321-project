@@ -115,3 +115,106 @@ function confirmAssignment() {
   alert("Assignment confirmed!");
   closeModal(); // Close the modal after confirmation
 }
+
+// Open Modify Modal
+function openModifyModal(
+  tripId,
+  price,
+  availableSeats,
+  departureTime,
+  arrivalTime,
+) {
+  document.getElementById("tripId").value = tripId; // Set Trip ID
+  document.getElementById("price").value = price; // Set Price
+  document.getElementById("availableSeats").value = availableSeats; // Set Available Seats
+  document.getElementById("departureTime").value = departureTime; // Set Departure Time
+  document.getElementById("arrivalTime").value = arrivalTime; // Set Arrival Time
+
+  document.getElementById("modifyModal").style.display = "block"; // Show Modal
+}
+
+// Close Modify Modal
+function closeModifyModal() {
+  document.getElementById("modifyModal").style.display = "none"; // Hide Modal
+}
+
+// Handle Modify Form Submission
+document
+  .getElementById("modifyTripForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    const tripId = document.getElementById("tripId").value;
+    const price = parseFloat(document.getElementById("price").value);
+    const availableSeats = parseInt(
+      document.getElementById("availableSeats").value,
+      10,
+    );
+    const departureTime = new Date(
+      document.getElementById("departureTime").value,
+    );
+    const arrivalTime = new Date(document.getElementById("arrivalTime").value);
+
+    // Validation: Check if availableSeats is valid
+    const originalAvailableSeats = parseInt(
+      document.getElementById("availableSeats").getAttribute("data-original"),
+      10,
+    );
+    if (availableSeats < originalAvailableSeats) {
+      alert("Available seats cannot be less than the original count.");
+      return; // Prevent submission
+    }
+
+    // Validation: Check if departure time is before arrival time
+    if (departureTime >= arrivalTime) {
+      alert("Departure time must be before the arrival time.");
+      return; // Prevent submission
+    }
+
+    // If validation passes, proceed with form submission
+    fetch(`/modify-trip/${tripId}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        price,
+        availableSeats,
+        departureTime,
+        arrivalTime,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Trip modified successfully.");
+          closeModifyModal();
+          location.reload(); // Refresh the page to update the table
+        } else {
+          alert("Failed to modify the trip: " + data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error modifying trip:", error);
+      });
+  });
+
+// Confirm Delete
+function confirmDelete(tripId) {
+  const isConfirmed = confirm("Are you sure you want to delete this trip?");
+  if (isConfirmed) {
+    fetch(`/delete-trip/${tripId}`, {
+      method: "DELETE",
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.success) {
+          alert("Trip deleted successfully.");
+          location.reload(); // Refresh the page to update the table
+        } else {
+          alert("Failed to delete the trip: " + data.message);
+        }
+      })
+      .catch((error) => {
+        console.error("Error deleting trip:", error);
+      });
+  }
+}

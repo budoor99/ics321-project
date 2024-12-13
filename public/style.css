@@ -1057,7 +1057,9 @@ table tbody tr:hover {
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   margin: 15px 0;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .ticket-left {
@@ -1167,4 +1169,55 @@ table tbody tr:hover {
 .btn-download:active {
   transform: scale(0.98);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.btn1 {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 4px 0;
+}
+
+.pay-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.pay-btn:hover {
+  background-color: #45a049;
+}
+
+.delete-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #d32f2f;
+}
+
+.payment-status {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 3px;
+}
+
+.payment-status.confirmed {
+  background-color: #4caf50;
+  color: white;
+}
+
+.payment-status.pending {
+  background-color: #ffc107;
+  color: black;
+}
+
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
